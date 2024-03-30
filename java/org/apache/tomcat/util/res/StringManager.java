@@ -16,6 +16,7 @@
  */
 package org.apache.tomcat.util.res;
 
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -122,6 +123,10 @@ public class StringManager {
             // Avoid NPE if bundle is null and treat it like an MRE
             if (bundle != null) {
                 str = bundle.getString(key);
+            }
+            // 日志打印时会读取系统默认的语言，将原本的 iso-8859-1 转换成 utf-8
+            if (str != null) {
+                str = new String(str.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
             }
         } catch (MissingResourceException mre) {
             // bad: shouldn't mask an exception the following way:
